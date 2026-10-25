@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="forgeGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00df9f" />
+      <stop offset="100%" stop-color="#00b87c" />
+    </linearGradient>
+    <linearGradient id="forgeSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#00b87c" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Stylized Geometric Forge CF/F Emblem -->
+  <g transform="translate(40, 20)" filter="url(#glow)">
+    <!-- Main Outer Green Loop -->
+    <path d="M 170 85 
+             C 100 85, 45 140, 45 220 
+             C 45 300, 105 355, 185 355 
+             C 245 355, 295 315, 320 265 
+             L 260 265 
+             C 245 290, 218 310, 185 310 
+             C 130 310, 90 270, 90 220 
+             C 90 170, 130 130, 185 130 
+             L 230 130 
+             L 255 85 
+             Z" 
+          fill="url(#forgeGreen)" />
+
+    <!-- Silver Diagonal Bridge -->
+    <path d="M 270 85 
+             L 370 85 
+             L 220 310 
+             L 155 310 
+             Z" 
+          fill="url(#forgeSilver)" opacity="0.9" />
+
+    <!-- Lower Green Horizontal Bar -->
+    <path d="M 235 210 
+             L 345 210 
+             L 345 255 
+             L 205 255 
+             Z" 
+          fill="url(#forgeGreen)" />
+  </g>
+
+  <!-- Wordmark FORGE -->
+  <text x="250" y="440" 
+        text-anchor="middle" 
+        font-family="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" 
+        font-size="64" 
+        font-weight="700" 
+        letter-spacing="18" 
+        fill="#00c48c">FORGE</text>
+</svg>
