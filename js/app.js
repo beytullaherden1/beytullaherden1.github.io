@@ -6,6 +6,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   initTabNavigation();
   initRoleTyper();
+  initProfileToggle();
+  initBackToTop();
   initProjectFilters();
   initQualiMaskSimulator();
   initCopyHelpers();
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. Tab Navigation System with URL Hash Sync
+   1. Tab Navigation System with URL Hash Sync & Auto-Centering
    ========================================================================== */
 function initTabNavigation() {
   const tabButtons = document.querySelectorAll('.tab-btn');
@@ -34,6 +36,11 @@ function initTabNavigation() {
     targetBtn.classList.add('active');
     targetPanel.classList.add('active');
 
+    // Smoothly center active button in horizontal mobile tab-navbar
+    if (targetBtn.scrollIntoView) {
+      targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
     if (updateHash) {
       history.replaceState(null, null, `#${cleanId}`);
     }
@@ -42,7 +49,7 @@ function initTabNavigation() {
     if (window.innerWidth < 1080) {
       const contentArea = document.querySelector('.content-area');
       if (contentArea) {
-        const topOffset = contentArea.getBoundingClientRect().top + window.pageYOffset - 20;
+        const topOffset = contentArea.getBoundingClientRect().top + window.pageYOffset - 16;
         window.scrollTo({ top: topOffset, behavior: 'smooth' });
       }
     }
@@ -293,7 +300,60 @@ Banka Bilgisi: TR12 0001 5000 0002 9999 8888 77 nolu hesaba aktarım yapıldığ
 }
 
 /* ==========================================================================
-   5. Copy Helper (Email & Certificate Verification)
+   5. Mobile Profile Details Accordion Toggle
+   ========================================================================== */
+function initProfileToggle() {
+  const toggleBtn = document.getElementById('profileDetailsToggle');
+  const metaList = document.getElementById('profileMetaList');
+
+  if (!toggleBtn || !metaList) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+    const nextState = !isExpanded;
+    
+    toggleBtn.setAttribute('aria-expanded', String(nextState));
+    metaList.classList.toggle('is-open', nextState);
+    
+    const textSpan = toggleBtn.querySelector('.toggle-text');
+    if (textSpan) {
+      textSpan.textContent = nextState 
+        ? 'Özgeçmiş & Stack Bilgilerini Kapat' 
+        : 'Özgeçmiş & Stack Detayları';
+    }
+  });
+}
+
+/* ==========================================================================
+   6. Floating Back to Top System (Smooth Touch Support)
+   ========================================================================== */
+function initBackToTop() {
+  const backBtn = document.getElementById('backToTopBtn');
+  if (!backBtn) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (window.scrollY > 300) {
+          backBtn.classList.add('visible');
+        } else {
+          backBtn.classList.remove('visible');
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  backBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ==========================================================================
+   7. Copy Helper (Email & Certificate Verification)
    ========================================================================== */
 function initCopyHelpers() {
   document.querySelectorAll('[data-copy-text]').forEach(btn => {
@@ -317,35 +377,41 @@ function showToast(message) {
     toast = document.createElement('div');
     toast.id = 'siteToast';
     toast.style.position = 'fixed';
-    toast.style.bottom = '28px';
-    toast.style.right = '28px';
+    toast.style.bottom = 'max(24px, env(safe-area-inset-bottom, 24px))';
+    toast.style.left = '50%';
+    toast.style.transform = 'translate(-50%, 14px)';
+    toast.style.maxWidth = 'calc(100% - 32px)';
+    toast.style.width = 'max-content';
     toast.style.background = 'var(--bg-card-elevated)';
     toast.style.color = 'var(--primary-light)';
     toast.style.border = '1px solid var(--primary-border)';
     toast.style.padding = '12px 20px';
-    toast.style.borderRadius = 'var(--radius-md)';
+    toast.style.borderRadius = 'var(--radius-full)';
     toast.style.fontFamily = 'var(--font-mono)';
-    toast.style.fontSize = '0.84rem';
-    toast.style.boxShadow = 'var(--shadow-card)';
+    toast.style.fontSize = '0.82rem';
+    toast.style.fontWeight = '600';
+    toast.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow)';
     toast.style.zIndex = '9999';
-    toast.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+    toast.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
     toast.style.opacity = '0';
-    toast.style.transform = 'translateY(10px)';
+    toast.style.pointerEvents = 'none';
+    toast.style.textAlign = 'center';
     document.body.appendChild(toast);
   }
 
   toast.textContent = message;
   toast.style.opacity = '1';
-  toast.style.transform = 'translateY(0)';
+  toast.style.transform = 'translate(-50%, 0)';
 
-  setTimeout(() => {
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
     toast.style.opacity = '0';
-    toast.style.transform = 'translateY(10px)';
-  }, 2400);
+    toast.style.transform = 'translate(-50%, 14px)';
+  }, 2600);
 }
 
 /* ==========================================================================
-   6. Contact Form (Direct mailto trigger)
+   8. Contact Form (Direct mailto trigger)
    ========================================================================== */
 function initContactForm() {
   const form = document.getElementById('contactForm');

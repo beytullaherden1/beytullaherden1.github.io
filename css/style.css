@@ -150,25 +150,6 @@ button {
   border-color: var(--border-light);
 }
 
-/* Sidebar Header & Identity (Eye-Friendly, Minimalist Architecture) */
-.profile-card {
-  position: sticky;
-  top: 40px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  padding: 32px 28px;
-  display: flex;
-  flex-direction: column;
-  transition: var(--transition);
-  backdrop-filter: blur(12px);
-}
-
-.profile-card:hover {
-  border-color: var(--border-light);
-}
-
 /* Subtle, Quiet Status Line (Non-Badge) */
 .profile-status-line {
   display: flex;
@@ -194,9 +175,14 @@ button {
   50% { opacity: 0.45; transform: scale(0.85); }
 }
 
-/* Profile Header & Typography (No SVG Image) */
+/* Profile Header & Typography */
 .profile-header-group {
   margin-bottom: 24px;
+}
+
+.profile-title-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-monogram {
@@ -225,7 +211,7 @@ button {
   margin-bottom: 8px;
 }
 
-/* Clean Typography Role (No Pill Border / No Badge) */
+/* Clean Typography Role */
 .profile-role {
   display: block;
   font-family: var(--font-mono);
@@ -248,7 +234,41 @@ button {
   50% { opacity: 0; }
 }
 
-/* Minimalist Clean Key-Value List (Thin Separators, Zero Box-Clutter) */
+/* Mobile Profile Details Toggle (Desktop hidden) */
+.profile-details-toggle {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--silver);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.profile-details-toggle:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary-border);
+  color: var(--primary-light);
+}
+
+.profile-details-toggle .toggle-chevron {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--primary);
+}
+
+.profile-details-toggle[aria-expanded="true"] .toggle-chevron {
+  transform: rotate(180deg);
+}
+
+/* Minimalist Clean Key-Value List (Thin Separators) */
 .profile-meta-list {
   list-style: none;
   background: transparent;
@@ -1610,21 +1630,94 @@ button {
   line-height: 1.5;
 }
 
+/* ==========================================================================
+   Interactive Polish & Floating Controls
+   ========================================================================== */
+
+/* Touch Action & Tap Highlight Reset */
+button, a, .tab-btn, .filter-btn, .sim-btn, .social-icon-btn, .project-link-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:active, .btn-primary:active, .btn-secondary:active, .tab-btn:active, .filter-btn:active, .sim-btn:active {
+  transform: scale(0.97);
+}
+
+/* Floating Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: max(22px, env(safe-area-inset-bottom, 22px));
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(13, 19, 32, 0.92);
+  border: 1px solid var(--primary-border);
+  color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 16px var(--primary-glow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: pointer;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.85);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.back-to-top:hover {
+  background: var(--primary);
+  color: #06110e;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 8px 25px rgba(0, 196, 140, 0.45);
+}
+
+.back-to-top:active {
+  transform: scale(0.92);
+}
+
+/* ==========================================================================
+   MULTI-TIER RESPONSIVE ARCHITECTURE (MOBILE-FIRST POLISH)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TABLETS & SMALL DESKTOPS (<= 1080px)
+   -------------------------------------------------------------------------- */
 @media (max-width: 1080px) {
   .workspace-layout {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .site-wrapper {
+    padding: 28px 20px 48px;
   }
 
   .profile-card {
     position: static;
+    top: auto;
+    padding: 28px 24px;
   }
 
   .tab-navbar {
-    top: 16px;
+    top: max(12px, env(safe-area-inset-top, 12px));
+    z-index: 50;
   }
 
   .deeptech-body {
     grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 24px;
   }
 
   .interactive-simulator {
@@ -1636,7 +1729,8 @@ button {
   }
 
   .projects-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 
   .pillars-grid {
@@ -1648,7 +1742,7 @@ button {
   }
 
   .skills-matrix {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .contact-layout {
@@ -1657,6 +1751,7 @@ button {
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .pipeline-steps-grid {
@@ -1668,39 +1763,741 @@ button {
   }
 }
 
-@media (max-width: 640px) {
-  .pipeline-steps-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .soap-grid {
-    grid-template-columns: 1fr;
-  }
-
+/* --------------------------------------------------------------------------
+   2. STANDARD SMARTPHONES & MOBILE PHONES (<= 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
   .site-wrapper {
-    padding: 16px 12px 40px;
+    padding: 16px 14px 44px;
+    padding-left: max(14px, env(safe-area-inset-left, 14px));
+    padding-right: max(14px, env(safe-area-inset-right, 14px));
   }
 
+  /* Profile Card (Compact Mobile Identity Header) */
+  .profile-card {
+    padding: 20px 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .profile-status-line {
+    margin-bottom: 14px;
+    font-size: 0.72rem;
+  }
+
+  .profile-header-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .profile-monogram {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    margin-bottom: 0;
+    font-size: 1.05rem;
+    border-radius: 12px;
+  }
+
+  .profile-name {
+    font-size: 1.35rem;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  .profile-role {
+    font-size: 0.78rem;
+    min-height: 20px;
+    line-height: 1.35;
+  }
+
+  /* 2-Column Action Buttons for Mobile Thumbs */
+  .profile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .btn-primary svg, .btn-secondary svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  .profile-socials {
+    padding-top: 14px;
+    gap: 10px;
+  }
+
+  .social-icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Mobile Collapsible Details Accordion */
+  .profile-details-toggle {
+    display: flex;
+  }
+
+  .profile-meta-list {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    border: none;
+    padding: 0;
+    margin-bottom: 0;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, padding 0.25s ease;
+  }
+
+  .profile-meta-list.is-open {
+    max-height: 420px;
+    opacity: 1;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 0;
+    margin-bottom: 16px;
+  }
+
+  .profile-meta-item {
+    font-size: 0.82rem;
+    gap: 8px;
+  }
+
+  .meta-label {
+    font-size: 0.72rem;
+  }
+
+  .meta-val {
+    font-size: 0.82rem;
+  }
+
+  /* Sticky Tab Navbar with Smooth Touch Mask */
+  .tab-navbar {
+    top: max(8px, env(safe-area-inset-top, 8px));
+    padding: 6px;
+    border-radius: var(--radius-md);
+    gap: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  }
+
+  .tab-btn {
+    padding: 9px 13px;
+    font-size: 0.78rem;
+    min-height: 40px;
+    scroll-snap-align: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .tab-btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .tab-badge {
+    font-size: 0.68rem;
+    padding: 1px 5px;
+  }
+
+  /* Hero & Headings */
   .panel-hero {
-    padding: 24px 20px;
+    padding: 22px 18px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+  }
+
+  .panel-hero-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    margin-bottom: 8px;
   }
 
   .panel-title {
+    font-size: 1.45rem;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .panel-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  /* Stats Grid (Clean 2x2 Dashboard) */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    padding: 14px 12px;
+    border-radius: var(--radius-sm);
+  }
+
+  .stat-num {
+    font-size: 1.7rem;
+    margin-bottom: 4px;
+  }
+
+  .stat-title {
+    font-size: 0.75rem;
+  }
+
+  /* Narrative & Pillars */
+  .narrative-card {
+    padding: 20px 18px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    border-radius: var(--radius-md);
+  }
+
+  .pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .pillar-item {
+    padding: 18px 16px;
+    border-radius: var(--radius-sm);
+  }
+
+  .pillar-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .pillar-title {
+    font-size: 0.98rem;
+  }
+
+  .pillar-desc {
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  /* DeepTech Product Cards */
+  .deeptech-header {
+    padding: 20px 18px 16px;
+    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-title {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .product-summary {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .product-badge {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+  }
+
+  .product-tech-stack {
+    gap: 6px;
+  }
+
+  .tech-chip {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+
+  .deeptech-body {
+    padding: 18px 16px;
+    gap: 18px;
+  }
+
+  .spec-col h4 {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  .spec-list {
+    font-size: 0.85rem;
+    gap: 8px;
+  }
+
+  /* QualiMask Simulator Desk */
+  .interactive-simulator {
+    padding: 16px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .sim-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .sim-title {
+    font-size: 0.82rem;
+  }
+
+  .sim-controls {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .sim-btn {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-height: 34px;
+  }
+
+  .sim-box-title {
+    font-size: 0.72rem;
+    margin-bottom: 5px;
+  }
+
+  .sim-text-area {
+    height: 105px;
+    font-size: 0.82rem;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .sim-output-box {
+    height: 110px;
+    font-size: 0.82rem;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .sim-metrics {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.72rem;
+    margin-top: 10px;
+  }
+
+  .sim-metric-tag {
+    padding: 3px 8px;
+  }
+
+  /* Virgil-AI Pipeline */
+  .virgil-pipeline-container {
+    padding: 16px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .pipeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .pipeline-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pipeline-step-card {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .pipeline-step-name {
+    font-size: 0.88rem;
+  }
+
+  .pipeline-step-detail {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .pipeline-step-highlight {
+    font-size: 0.7rem;
+  }
+
+  .baseline-callout {
+    padding: 14px 12px;
+    font-size: 0.82rem;
+  }
+
+  .baseline-header {
+    font-size: 0.78rem;
+    gap: 6px;
+  }
+
+  .model-pill-row {
+    gap: 6px;
+  }
+
+  .model-pill {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+  }
+
+  /* MindScribe SOAP Grid */
+  .soap-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .soap-box {
+    padding: 12px 10px;
+    gap: 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .soap-letter {
+    width: 24px;
+    height: 24px;
+    font-size: 0.76rem;
+    border-radius: 4px;
+  }
+
+  .soap-title {
+    font-size: 0.8rem;
+  }
+
+  .soap-desc {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  /* Project Filter Bar & 11 Commercial Projects */
+  .project-filters {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 7px 13px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    min-height: 36px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-card {
+    padding: 18px 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .project-top {
+    margin-bottom: 10px;
+  }
+
+  .project-name {
+    font-size: 1.18rem;
+  }
+
+  .project-domain {
+    font-size: 0.76rem;
+    margin-bottom: 8px;
+  }
+
+  .project-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  .project-impact {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .project-tags {
+    gap: 5px;
+  }
+
+  .project-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+
+  .project-link-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Skills & Credentials */
+  .credentials-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cert-card {
+    padding: 20px 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .cert-title {
+    font-size: 1.15rem;
+  }
+
+  .cert-verify-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.74rem;
+  }
+
+  .skills-matrix {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .skill-category-card {
+    padding: 18px 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .skill-pill {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+
+  .timeline {
+    padding-left: 18px;
+    gap: 14px;
+  }
+
+  .timeline::before {
+    left: 5px;
+  }
+
+  .timeline-item::before {
+    left: -19px;
+    width: 12px;
+    height: 12px;
+    top: 18px;
+  }
+
+  .timeline-item {
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .timeline-title {
+    font-size: 1rem;
+  }
+
+  .timeline-desc {
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  /* Contact Section & iOS Zoom Prevention */
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .contact-info-card, .contact-form-card {
+    padding: 22px 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .contact-tile {
+    padding: 12px 14px;
+    gap: 12px;
+    border-radius: var(--radius-sm);
+  }
+
+  .contact-tile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .contact-tile-val {
+    font-size: 0.88rem;
+    word-break: break-all;
+  }
+
+  /* 16px font-size prevents iOS Safari auto-zoom on field focus */
+  .form-input, .form-textarea {
+    font-size: 16px !important;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .form-input {
+    min-height: 48px;
+  }
+
+  .form-textarea {
+    height: 110px;
+  }
+
+  .btn-primary[type="submit"] {
+    width: 100%;
+    min-height: 48px;
+    font-size: 0.92rem;
+  }
+
+  /* Footer */
+  .site-footer {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    font-size: 0.76rem;
+    margin-top: 36px;
+    padding: 20px 0 calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. COMPACT PHONES & SE-SERIES (<= 480px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .site-wrapper {
+    padding: 12px 8px 36px;
+  }
+
+  .profile-card {
+    padding: 16px 12px;
+  }
+
+  .profile-monogram {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .profile-name {
+    font-size: 1.22rem;
+  }
+
+  .profile-role {
+    font-size: 0.74rem;
+  }
+
+  .profile-actions {
+    gap: 6px;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 9px 8px;
+    font-size: 0.76rem;
+    gap: 5px;
+  }
+
+  .panel-hero {
+    padding: 18px 14px;
+  }
+
+  .panel-title {
+    font-size: 1.28rem;
+  }
+
+  .stat-num {
     font-size: 1.5rem;
+  }
+
+  .stat-title {
+    font-size: 0.72rem;
+  }
+
+  .soap-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .soap-box {
+    padding: 10px 8px;
+  }
+
+  .soap-title {
+    font-size: 0.76rem;
+  }
+
+  .soap-desc {
+    font-size: 0.7rem;
+  }
+
+  .tab-navbar {
+    padding: 5px;
+    gap: 3px;
+  }
+
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 0.74rem;
+    min-height: 36px;
+  }
+
+  .back-to-top {
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. ULTRA-NARROW / FOLDABLE COVER SCREENS (<= 360px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 360px) {
+  .soap-grid {
+    grid-template-columns: 1fr;
   }
 
   .stats-grid {
     grid-template-columns: 1fr;
   }
 
-  .tab-btn {
-    padding: 8px 12px;
-    font-size: 0.82rem;
+  .profile-actions {
+    grid-template-columns: 1fr;
   }
 
-  .site-footer {
+  .profile-header-group {
     flex-direction: column;
-    gap: 12px;
-    text-align: center;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
